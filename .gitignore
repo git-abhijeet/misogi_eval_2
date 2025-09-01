@@ -1,0 +1,19 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+
+# Virtualenv
+abhi/
+venv/
+.Python
+
+# Distribution / packaging
+*.egg-info/
+*.dist-info/
+
+# dotenv
+.env
+
+# Editor / OS
+*.swp
+.DS_Store
