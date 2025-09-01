@@ -8,11 +8,7 @@ from datetime import datetime
 
 
 async def transfer_money(transfer_request: TransferRequest):
-    print("🐍 [transfer_controllers.py:11] ▶", transfer_request)
-    # try:
-    print("🐍 [transfer_controllers.py:6] ▶", transfer_request)
 
-    # Check if sender has sufficient balance
     sender = user_collection.find_one({"_id": ObjectId(transfer_request.sender_user_id)})
     if not sender:
         raise HTTPException(status_code=404, detail="Sender not found")
@@ -29,19 +25,16 @@ async def transfer_money(transfer_request: TransferRequest):
         }
         raise HTTPException(status_code=400, detail=data)
 
-    # Add amount to recipient
     recipient = user_collection.find_one({"_id": ObjectId(transfer_request.recipient_user_id)})
     if not recipient:
         raise HTTPException(status_code=404, detail="Recipient not found")
     print("🐍 [transfer_controllers.py:25] ▶", recipient)
     
-    # Deduct amount from sender
     user_collection.update_one({"_id": ObjectId(transfer_request.sender_user_id)}, {"$inc": {"balance": -transfer_request.amount}})
 
 
     user_collection.update_one({"_id": ObjectId(transfer_request.recipient_user_id)}, {"$inc": {"balance": +transfer_request.amount}})
 
-    # Create transaction record
     transaction = {
         "user_id": transfer_request.sender_user_id,
         "transaction_type": "TRANSFER_OUT",
@@ -52,10 +45,6 @@ async def transfer_money(transfer_request: TransferRequest):
     }
     transaction_data = transaction_collection.insert_one(transaction)
     print("🐍 [transfer_controllers.py:45] ▶", transaction_data)
-
-
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=str(e))
     
     return {
         "transfer_id": str(transaction_data.inserted_id),

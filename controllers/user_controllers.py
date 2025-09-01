@@ -20,11 +20,9 @@ async def get_user(user_id: str):
     try:
         print("🐍 [user_controllers.py:17] ▶", user_id)
         user_data = user_collection.find_one({"_id": ObjectId(user_id)})
-        print("🐍 [user_controllers.py:23] ▶", user_data)
         if not user_data:
             raise HTTPException(status_code=404, detail="User not found")
         user_data["_id"] = str(user_data["_id"])
-        print("🐍 [user_controllers.py:27] ▶", user_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return user_data
@@ -32,7 +30,6 @@ async def get_user(user_id: str):
 async def update_user(user_id: str, user: UpdateUser):
     try:
         print("🐍 [user_controllers.py:31] ▶", user_id, user)
-        
         user_data = user_collection.find_one({"_id": ObjectId(user_id)})
         if not user_data:
             raise HTTPException(status_code=404, detail="User not found")
